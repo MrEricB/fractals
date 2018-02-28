@@ -36,8 +36,6 @@ bool Bitmap::write(std::string filename){
     ofile.write((char *)&infoHeader, sizeof(infoHeader));
     ofile.write((char *)m_pPixels.get(), m_width*m_height*3);
 
-
-
     ofile.close();
 
     if(!ofile){
@@ -47,5 +45,13 @@ bool Bitmap::write(std::string filename){
     return true;
 }
 void Bitmap::setPixel(int x, int y, uint8_t red, uint8_t green, uint8_t blue){
+    uint8_t *pPixel = m_pPixels.get(); //pointer to memory block that represents the whole screen
+
+    pPixel += (y*3)*m_width + (3*x);
+    
+    //reverse order ie is BGR not RGB because bitmap is little endian file format.
+    pPixel[0] = blue;
+    pPixel[1] = green;
+    pPixel[2] = red; 
 
 }
