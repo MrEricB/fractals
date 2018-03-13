@@ -39,5 +39,6 @@ int main(){
     bitmap.write("test.bmp");
 
     std::cout << "Finished" << std::endl;
+    std::cout << "Testing for github" << std::endl;
     return 0;
 }
