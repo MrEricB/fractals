@@ -4,6 +4,7 @@
 #include <cmath>
 #include "Bitmap.hpp"
 #include "Mandelbrot.hpp"
+#include "ZoomList.hpp"
 
 int main(){
 
@@ -14,8 +15,15 @@ int main(){
 
     bitmap.setPixel(WIDTH/2, HEIGHT/2, 255, 255, 255);
 
-    double min = 999999;
-    double max = -999999;
+    //double min = 999999;
+    //double max = -999999;
+
+    ZoomList zoomList(WIDTH, HEIGHT);
+
+    //where to zoom around, first is the center are points on fractal to zoom around.
+    zoomList.add(Zoom(WIDTH/2, HEIGHT/2, 4.0/WIDTH));
+    zoomList.add(Zoom(295, HEIGHT-202, 0.1));
+    zoomList.add(Zoom(312, HEIGHT - 304, 0.1));
 
     //iterations per pixel
     std::unique_ptr<int[]> histogram(new int[Mandelbrot::MAX_INTERATIONS]{0});
@@ -25,11 +33,9 @@ int main(){
     for(int y = 0; y < HEIGHT; y++){
         for(int x = 0; x < WIDTH; x++){
 
-            //make scaling factor the same to fix the "squashed" look of bitmap.
-            double xFrac = (x - WIDTH/2 -200) * 2.0/HEIGHT; //max xFac [-1,1]
-            double yFrac = (y - HEIGHT/2) * 2.0/HEIGHT;
+            std::pair<double, double> coords = zoomList.doZoom(x,y);
 
-            int iterations = Mandelbrot::getInterations(xFrac, yFrac);
+            int iterations = Mandelbrot::getInterations(coords.first, coords.second);
 
             fractal[y*WIDTH+x] = iterations;
 
@@ -66,13 +72,9 @@ int main(){
                 green = pow(255, hue);
             }
 
-
-        
             bitmap.setPixel(x,y, red, green, blue);
         }
     }
-
-
 
     bitmap.write("test.bmp");
 
