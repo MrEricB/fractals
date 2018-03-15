@@ -4,10 +4,13 @@
 #include <string>
 #include <cmath>
 #include <cstdint>
+#include <vector>
+// #include <iostream>
 // #include "Mandelbrot.hpp"
 #include "Zoom.hpp"
 #include "Bitmap.hpp"
 #include "ZoomList.hpp"
+#include "RGB.hpp"
 
 
 class FractalCreator{
@@ -22,15 +25,27 @@ private:
     ZoomList m_zoomList;
     int m_total{0};
 
-public:
-    FractalCreator(int width, int height);
-    ~FractalCreator();
+    std::vector<int> m_ranges;
+    std::vector<RGB> m_colors;
+    std::vector<int> m_rangeTotals;
 
+    bool m_GotFirstRange{false};
+
+
+private:
     void calculateIterations();
     void drawFractal();
     void writeBitmap(std::string name);
-    void addZoom(const Zoom& zoom);
     void calculateTotalIterations();
+    void calculateRangeTotals();
+    int getRange(int iterations) const;
+
+public:
+    FractalCreator(int width, int height);
+    ~FractalCreator();
+    void addZoom(const Zoom& zoom);
+    void run(std::string name);
+    void colorRange(double rangeEnd, const RGB& rgb);
 
 };
 #endif
