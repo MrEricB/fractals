@@ -4,7 +4,6 @@
 #include "Zoom.hpp"
 #include <vector>
 #include <utility> //pair<>
-#include <iostream>
 
 class ZoomList {
 private:
